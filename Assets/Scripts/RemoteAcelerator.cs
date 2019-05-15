@@ -14,6 +14,8 @@ public class RemoteAcelerator : MonoBehaviour {
     private SkateController skateController;
     private Rigidbody rigidbodyHand;
 
+    private float maxImpulse;
+
     [SerializeField] Text speedText;
     [SerializeField] Text impulseText;
     [SerializeField] GameObject UICenter;
@@ -23,7 +25,7 @@ public class RemoteAcelerator : MonoBehaviour {
         nVRHand = GetComponent<NVRHand>();
         rigidbodyHand = GetComponent<Rigidbody>();
         skateController = FindObjectOfType<SkateController>();
-        velocimeter = GetComponentInChildren<Velocimeter>();
+        velocimeter = FindObjectOfType<Velocimeter>();
     }
 
     // Update is called once per frame
@@ -36,6 +38,7 @@ public class RemoteAcelerator : MonoBehaviour {
                 skateController.rigidbody.velocity = Vector3.forward * skateController.maxSpeed;
             }
         } else {
+            maxImpulse = 0;
             if (skateController.rigidbody.velocity.magnitude < skateController.minSpeed) {
                 skateController.rigidbody.velocity = Vector3.zero;
             } else {
@@ -49,11 +52,14 @@ public class RemoteAcelerator : MonoBehaviour {
     }
 
     private void Acelerate() {
-        Vector3 impulseforce = Vector3.Project(velocimeter.thisRigidbody.velocity, skateController.rigidbody.velocity);
+        Vector3 impulseforce = Vector3.Project(velocimeter.thisRigidbody.velocity, skateController.transform.forward + skateController.rigidbody.velocity);
         float force = impulseforce.magnitude - skateController.rigidbody.velocity.magnitude;
-        skateController.rigidbody.AddForce(skateController.transform.forward * force, ForceMode.Acceleration);
-        impulseText.text = "Impulse: " + force.ToString();
-        DrawImpulse(impulseforce);
+        if (force >= maxImpulse) {
+            maxImpulse = force;
+            skateController.rigidbody.AddForce(skateController.transform.forward * force * aceleration, ForceMode.Acceleration);
+            impulseText.text = "Impulse: " + force.ToString();
+            DrawImpulse(impulseforce);
+        }
     }
 
     private void DrawImpulse(Vector3 impulse) {

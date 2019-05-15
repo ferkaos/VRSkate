@@ -25,20 +25,11 @@ public class SkateController : MonoBehaviour {
 	
 	void Start () {
         rigidbody = GetComponent<Rigidbody>();
-        //test = Instantiate(testPrefab);
-        //test.transform.parent = this.transform;
     }
 	
 	void Update () {
-        //CalculateDistanceHeadSkate();
-        //SetTableTilt();
-        SetDirection();
+        //SetDirection();
     }
-
-    //private void CalculateDistanceHeadSkate() {
-    //    //relativePositionToSkate = head.transform.InverseTransformPoint(transform.position);
-    //    //test.transform.position = new Vector3(head.transform.position.x, this.transform.position.y, head.transform.position.z);
-    //}
 
     private void CalculateAxisX() {
         AxisX = headPositionSensor.GetAxisX();
@@ -53,13 +44,11 @@ public class SkateController : MonoBehaviour {
     }
 
     private void SetDirection() {
-        //if (rigidbody.velocity.magnitude > minSpeed) {
-            if (rigidbody.angularVelocity.sqrMagnitude < 5) {
-                CalculateAxisX();
-                torqueForce = new Vector3(0, AxisX * torqueAcelerationMultiplier /** rigidbody.velocity.sqrMagnitude*/, 0);
-                rigidbody.AddTorque(torqueForce, ForceMode.Acceleration);
-            }
-        //}
+        if (rigidbody.angularVelocity.sqrMagnitude < 5) {
+            CalculateAxisX();
+            torqueForce = new Vector3(0, AxisX * torqueAcelerationMultiplier /** rigidbody.velocity.sqrMagnitude*/, 0);
+            rigidbody.AddTorque(torqueForce, ForceMode.Acceleration);
+        }
     }
 
 
