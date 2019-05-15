@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SkateController : MonoBehaviour {
-
+    public bool setDirection;
     public Rigidbody rigidbody;
     public GameObject head;
     public GameObject tableModel;
@@ -28,7 +28,14 @@ public class SkateController : MonoBehaviour {
     }
 	
 	void Update () {
-        //SetDirection();
+        SetDirection();
+        if (setDirection) {
+            SetVelocityDirection();
+        }
+    }
+
+    private void SetVelocityDirection() {
+        transform.rotation = Quaternion.LookRotation(rigidbody.velocity, Vector3.up);
     }
 
     private void CalculateAxisX() {
@@ -44,9 +51,11 @@ public class SkateController : MonoBehaviour {
     }
 
     private void SetDirection() {
-        if (rigidbody.angularVelocity.sqrMagnitude < 5) {
+        if (rigidbody.angularVelocity.sqrMagnitude < maxSpeed && rigidbody.velocity.sqrMagnitude > 0.5f) {
             CalculateAxisX();
             torqueForce = new Vector3(0, AxisX * torqueAcelerationMultiplier /** rigidbody.velocity.sqrMagnitude*/, 0);
+            float forceSmoother = Mathf.Clamp(1 - rigidbody.angularVelocity.sqrMagnitude / maxSpeed, 0.25f, 1);
+            torqueForce *= forceSmoother;
             rigidbody.AddTorque(torqueForce, ForceMode.Acceleration);
         }
     }
