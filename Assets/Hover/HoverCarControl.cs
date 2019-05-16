@@ -17,6 +17,8 @@ public class HoverCarControl : MonoBehaviour
 
   public float m_turnStrength = 10f;
   float m_currTurn = 0.0f;
+    public bool withDirectionVelocityAssistance;
+    [Range(0, 1)] public float directionVelocityAssistancePercent;
 
   public GameObject m_leftAirBrake;
   public GameObject m_rightAirBrake;
@@ -86,9 +88,7 @@ public class HoverCarControl : MonoBehaviour
                           -Vector3.up, out hit,
                           m_hoverHeight,
                           m_layerMask))
-        m_body.AddForceAtPosition(Vector3.up 
-          * m_hoverForce
-          * (1.0f - (hit.distance / m_hoverHeight)), 
+        m_body.AddForceAtPosition(Vector3.up * m_hoverForce * (1.0f - (hit.distance / m_hoverHeight)), 
                                   hoverPoint.transform.position);
       else
       {
@@ -102,6 +102,10 @@ public class HoverCarControl : MonoBehaviour
             hoverPoint.transform.position);
       }
     }
+        if (withDirectionVelocityAssistance) {
+            Vector3 onNormal = Vector3.Lerp(m_body.velocity, transform.forward, directionVelocityAssistancePercent);
+            m_body.velocity = Vector3.Project(m_body.velocity, onNormal);
+        }
 
     // Forward
     if (Mathf.Abs(m_currThrust) > 0)
