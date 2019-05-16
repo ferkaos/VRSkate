@@ -22,7 +22,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/ferkaos/VRSkate">
-    <img src="Assets/ExtraFiles/LogoSquare.png" alt="Logo" width="80" height="80">
+    <img src="Assets/ExtraFiles/LogoSquare.png" alt="Logo" width="160" height="160">
   </a>
 
   <h3 align="center">VR Hover-Skate Simulator</h3>
