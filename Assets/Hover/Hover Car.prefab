@@ -907,8 +907,13 @@ MonoBehaviour:
   m_turnStrength: 750
   withDirectionVelocityAssistance: 1
   directionVelocityAssistancePercent: 0.4
+  forwardSpeedToDirectionVelocityAssistance: 1000
   m_leftAirBrake: {fileID: 100010}
   m_rightAirBrake: {fileID: 100008}
+  withShifting: 0
+  withInclination: 1
+  inclination: 0
+  inclinationForce: 20
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

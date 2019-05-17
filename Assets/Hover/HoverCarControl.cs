@@ -19,6 +19,8 @@ public class HoverCarControl : MonoBehaviour
   float m_currTurn = 0.0f;
     public bool withDirectionVelocityAssistance;
     [Range(0, 1)] public float directionVelocityAssistancePercent;
+    private float staticDirectionVelocityAssistancePercent;
+    public float forwardSpeedToDirectionVelocityAssistance;
 
   public GameObject m_leftAirBrake;
   public GameObject m_rightAirBrake;
@@ -26,6 +28,8 @@ public class HoverCarControl : MonoBehaviour
   int m_layerMask;
 
     [Header("Debug")]
+    public bool withShifting;
+    public bool withInclination = true;
     [Range(-50, 50)] public int inclination;
     public float inclinationForce = 2;
 
@@ -35,6 +39,8 @@ public class HoverCarControl : MonoBehaviour
 
     m_layerMask = 1 << LayerMask.NameToLayer("Characters");
     m_layerMask = ~m_layerMask;
+
+    staticDirectionVelocityAssistancePercent = directionVelocityAssistancePercent;
   }
 
   void OnDrawGizmos()
@@ -124,8 +130,15 @@ public class HoverCarControl : MonoBehaviour
       m_body.AddRelativeTorque(Vector3.up * m_currTurn * m_turnStrength);
     }
 
-    //Shift Movement
-        m_body.AddRelativeTorque(m_body.transform.forward * inclination * inclinationForce);
+        //Shift Movement Controller(Velocity direction assistance conflicts)
+        if (withDirectionVelocityAssistance && withShifting)  {
+            Vector3 forwardVelocity = Vector3.Project(m_body.velocity, transform.forward);
+            directionVelocityAssistancePercent = Mathf.Lerp(0, staticDirectionVelocityAssistancePercent, Mathf.Clamp(forwardVelocity.sqrMagnitude / forwardSpeedToDirectionVelocityAssistance, 0, 1));
+        }
+        //Inclination Movement Controller)
+        if (withInclination) {
+            m_body.AddRelativeTorque(m_body.transform.forward * inclination * inclinationForce);
+        }
         
     }
 }
