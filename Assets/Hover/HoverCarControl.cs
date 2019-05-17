@@ -25,6 +25,9 @@ public class HoverCarControl : MonoBehaviour
 
   int m_layerMask;
 
+    [Header("Debug")]
+    [Range(-50, 50)] public int inclination;
+
   void Start()
   {
     m_body = GetComponent<Rigidbody>();
@@ -42,7 +45,7 @@ public class HoverCarControl : MonoBehaviour
     {
       var hoverPoint = m_hoverPoints [i];
       if (Physics.Raycast(hoverPoint.transform.position, 
-                          -Vector3.up, out hit,
+                          -hoverPoint.transform.up, out hit,
                           m_hoverHeight, 
                           m_layerMask))
       {
@@ -53,7 +56,7 @@ public class HoverCarControl : MonoBehaviour
       {
         Gizmos.color = Color.red;
         Gizmos.DrawLine(hoverPoint.transform.position, 
-                       hoverPoint.transform.position - Vector3.up * m_hoverHeight);
+                       hoverPoint.transform.position - hoverPoint.transform.up * m_hoverHeight);
       }
     }
   }
@@ -85,10 +88,10 @@ public class HoverCarControl : MonoBehaviour
     {
       var hoverPoint = m_hoverPoints [i];
       if (Physics.Raycast(hoverPoint.transform.position, 
-                          -Vector3.up, out hit,
+                          -hoverPoint.transform.up, out hit,
                           m_hoverHeight,
                           m_layerMask))
-        m_body.AddForceAtPosition(Vector3.up * m_hoverForce * (1.0f - (hit.distance / m_hoverHeight)), 
+        m_body.AddForceAtPosition(hoverPoint.transform.up * m_hoverForce * (1.0f - (hit.distance / m_hoverHeight)), 
                                   hoverPoint.transform.position);
       else
       {
@@ -119,5 +122,7 @@ public class HoverCarControl : MonoBehaviour
     {
       m_body.AddRelativeTorque(Vector3.up * m_currTurn * m_turnStrength);
     }
+
+        transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, inclination);
   }
 }
