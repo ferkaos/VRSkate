@@ -68,23 +68,25 @@ public class HoverCarControl : MonoBehaviour
     }
   }
 	
-  void Update()
-  {
-
-    // Main Thrust
-    m_currThrust = 0.0f;
-    float aclAxis = Input.GetAxis("Vertical");
-    if (aclAxis > m_deadZone)
-      m_currThrust = aclAxis * m_forwardAcl;
-    else if (aclAxis < -m_deadZone)
-      m_currThrust = aclAxis * m_backwardAcl;
-
-    // Turning
-    m_currTurn = 0.0f;
-    float turnAxis = Input.GetAxis("Horizontal");
-    if (Mathf.Abs(turnAxis) > m_deadZone)
-      m_currTurn = turnAxis;
+  void Update() {
+        KeyBoardControl();
   }
+
+    private void KeyBoardControl() {
+        // Main Thrust
+        m_currThrust = 0.0f;
+        float aclAxis = Input.GetAxis("Vertical");
+        if (aclAxis > m_deadZone)
+            m_currThrust = aclAxis * m_forwardAcl;
+        else if (aclAxis < -m_deadZone)
+            m_currThrust = aclAxis * m_backwardAcl;
+
+        // Turning
+        m_currTurn = 0.0f;
+        float turnAxis = Input.GetAxis("Horizontal");
+        if (Mathf.Abs(turnAxis) > m_deadZone)
+            m_currTurn = turnAxis;
+    }
 
   void FixedUpdate()
   {
