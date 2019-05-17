@@ -22,13 +22,13 @@
 <br />
 <p align="center">
   <a href="https://github.com/ferkaos/VRSkate">
-    <img src="Assets/ExtraFiles/LogoSquare.png" alt="Logo" width="80" height="80">
+    <img src="Assets/ExtraFiles/LogoSquare.png" alt="Logo" width="320" height="320">
   </a>
 
-  <h3 align="center">Best-README-Template</h3>
+  <h3 align="center">VR Hover-Skate Simulator</h3>
 
   <p align="center">
-    An awesome README template to jumpstart your projects!
+    An Hover-Skate Simulator (Unity 3d Engine) by FerKaos
     <br />
     <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
     <br />
