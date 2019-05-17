@@ -27,6 +27,7 @@ public class HoverCarControl : MonoBehaviour
 
     [Header("Debug")]
     [Range(-50, 50)] public int inclination;
+    public float inclinationForce = 2;
 
   void Start()
   {
@@ -123,6 +124,8 @@ public class HoverCarControl : MonoBehaviour
       m_body.AddRelativeTorque(Vector3.up * m_currTurn * m_turnStrength);
     }
 
-        transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, inclination);
-  }
+    //Shift Movement
+        m_body.AddRelativeTorque(m_body.transform.forward * inclination * inclinationForce);
+        
+    }
 }
