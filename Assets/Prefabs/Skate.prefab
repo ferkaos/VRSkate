@@ -319,7 +319,7 @@ MonoBehaviour:
   m_turnStrength: 5
   withDirectionVelocityAssistance: 1
   directionVelocityAssistancePercent: 0.1
-  forwardSpeedToDirectionVelocityAssistance: 0
+  forwardSpeedToDirectionVelocityAssistance: 1
   m_leftAirBrake: {fileID: 0}
   m_rightAirBrake: {fileID: 0}
   withShifting: 0
