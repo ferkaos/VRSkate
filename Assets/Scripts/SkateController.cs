@@ -51,6 +51,7 @@ public class SkateController : MonoBehaviour {
 
     [Header("Grabbing")]
     private bool grabbed;
+    public GameObject particleSystem;
 
     void Start () {
         rigidbody = GetComponent<Rigidbody>();
@@ -72,13 +73,10 @@ public class SkateController : MonoBehaviour {
         bool anyHoverPointHit = false;
         for (int i = 0; i < m_hoverPoints.Length; i++) {
             var hoverPoint = m_hoverPoints[i];
-            if (Physics.Raycast(hoverPoint.transform.position,
-                                -hoverPoint.transform.up, out hit,
-                                m_hoverHeight,
-                                m_layerMask)) {
+            if (Physics.Raycast(hoverPoint.transform.position, -hoverPoint.transform.up, out hit, m_hoverHeight,  m_layerMask)) {
                 anyHoverPointHit = true;
-                m_body.AddForceAtPosition(hoverPoint.transform.up * m_hoverForce * (1.0f - (hit.distance / m_hoverHeight)),
-                                          hoverPoint.transform.position);
+                m_body.AddForceAtPosition(hoverPoint.transform.up * m_hoverForce * (1.0f - (hit.distance / m_hoverHeight)), hoverPoint.transform.position);
+                SkateOnFloor();
             } else {
                 Vector3 inclinationForceDirection = Vector3.ProjectOnPlane(transform.up, Vector3.up);
                 m_body.AddForceAtPosition(inclinationForceDirection * inclinationForce,  transform.position);
@@ -115,8 +113,13 @@ public class SkateController : MonoBehaviour {
 
     }
 
+    private void SkateOnFloor() {
+        particleSystem.SetActive(true);
+    }
+
     public void Grab() {
         grabbed = true;
+        particleSystem.SetActive(false);
     }
 
     public void Drop() {
