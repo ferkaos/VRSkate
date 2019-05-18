@@ -1,15 +1,16 @@
-﻿using NewtonVR;
+﻿
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using VRInteraction;
 
 public class RemoteAcelerator : MonoBehaviour {
 
     public float aceleration;
     public HeadPositionSensor headPositionSensor;
 
-    private NVRHand nVRHand;
+    private VRInput hand;
     private Velocimeter velocimeter;
     private SkateController skateController;
     private Rigidbody rigidbodyHand;
@@ -22,7 +23,7 @@ public class RemoteAcelerator : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
-        nVRHand = GetComponent<NVRHand>();
+        hand = GetComponent<VRInput>();
         rigidbodyHand = GetComponent<Rigidbody>();
         skateController = FindObjectOfType<SkateController>();
         velocimeter = FindObjectOfType<Velocimeter>();
@@ -31,7 +32,7 @@ public class RemoteAcelerator : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         Debug.Log(skateController.rigidbody.velocity);
-        if (nVRHand.UseButtonPressed) {
+        if (hand.TriggerPressed) {
             if (skateController.rigidbody.velocity.magnitude < skateController.maxSpeed) {
                 Acelerate();
             } else {
@@ -45,7 +46,7 @@ public class RemoteAcelerator : MonoBehaviour {
                 //Decelerate();
             }
         }
-        if (nVRHand.HoldButtonDown) {
+        if (hand.PadPressed) {
             headPositionSensor.RecenterHead();
         }
         speedText.text = "Speed: " + skateController.rigidbody.velocity.magnitude.ToString();

@@ -1,24 +1,24 @@
-﻿using NewtonVR;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VRInteraction;
 
 public class Velocimeter : MonoBehaviour {
-    [SerializeField] private NVRHand nVRHand;
+    [SerializeField] private VRInput hand;
     public Rigidbody thisRigidbody;
     public float velocity;
     // Use this for initialization
     void Start () {
-        nVRHand = GetComponent<NVRHand>();
+        hand = GetComponent<VRInput>();
         thisRigidbody = GetComponent<Rigidbody>();
     }
 	
 	// Update is called once per frame
 	void FixedUpdate() {
-        if(nVRHand == null) {
-            nVRHand = FindObjectOfType<RemoteAcelerator>().GetComponent<NVRHand>();
+        if(hand == null) {
+            hand = FindObjectOfType<RemoteAcelerator>().GetComponent<VRInput>();
         }
-        thisRigidbody.MovePosition(nVRHand.transform.position);
+        thisRigidbody.MovePosition(hand.transform.position);
         velocity = thisRigidbody.velocity.magnitude;
 	}
 }

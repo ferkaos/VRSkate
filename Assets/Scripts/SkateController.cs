@@ -49,6 +49,9 @@ public class SkateController : MonoBehaviour {
     [Range(-50, 50)] public int inclination;
     public float inclinationForce = 2;
 
+    [Header("Grabbing")]
+    private bool grabbed;
+
     void Start () {
         rigidbody = GetComponent<Rigidbody>();
         m_body = GetComponent<Rigidbody>();
@@ -61,8 +64,11 @@ public class SkateController : MonoBehaviour {
 
     void FixedUpdate() {
 
-        //  Hover Force
-        RaycastHit hit;
+        if (grabbed) {
+            return;
+        }
+            //  Hover Force
+            RaycastHit hit;
         bool anyHoverPointHit = false;
         for (int i = 0; i < m_hoverPoints.Length; i++) {
             var hoverPoint = m_hoverPoints[i];
@@ -75,16 +81,7 @@ public class SkateController : MonoBehaviour {
                                           hoverPoint.transform.position);
             } else {
                 Vector3 inclinationForceDirection = Vector3.ProjectOnPlane(transform.up, Vector3.up);
-                m_body.AddForceAtPosition(inclinationForceDirection * m_hoverForce,
-                                      transform.position);
-                //if (transform.position.y > hoverPoint.transform.position.y)
-                //    m_body.AddForceAtPosition(
-                //      hoverPoint.transform.up * m_hoverForce,
-                //      hoverPoint.transform.position);
-                //else
-                //    m_body.AddForceAtPosition(
-                //      hoverPoint.transform.up * -m_hoverForce,
-                //      hoverPoint.transform.position);
+                m_body.AddForceAtPosition(inclinationForceDirection * inclinationForce,  transform.position);
             }
         }
         if (withDirectionVelocityAssistance && anyHoverPointHit) {
@@ -116,6 +113,14 @@ public class SkateController : MonoBehaviour {
             m_body.AddRelativeTorque(m_body.transform.forward * inclination * inclinationForce);
         }
 
+    }
+
+    public void Grab() {
+        grabbed = true;
+    }
+
+    public void Drop() {
+        grabbed = false;
     }
 
     void Update () {
