@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class SkateController : MonoBehaviour {
     public bool setDirection;
-    public Rigidbody rigidbody;
     public GameObject head;
     public GameObject tableModel;
     public float tiltMultiplier = 1;
@@ -18,7 +17,7 @@ public class SkateController : MonoBehaviour {
     private float AxisX;
     private float AxisZ;
 
-    Rigidbody m_body;
+    [HideInInspector] public Rigidbody m_body;
     float m_deadZone = 0.1f;
 
     [Header("Hover")]
@@ -54,7 +53,6 @@ public class SkateController : MonoBehaviour {
     public GameObject particleSystem;
 
     void Start () {
-        rigidbody = GetComponent<Rigidbody>();
         m_body = GetComponent<Rigidbody>();
 
         m_layerMask = 1 << LayerMask.NameToLayer("Characters");
@@ -114,6 +112,9 @@ public class SkateController : MonoBehaviour {
     }
 
     private void SkateOnFloor() {
+        if(particleSystem == null) {
+            return;
+        }
         particleSystem.SetActive(true);
     }
 
@@ -127,20 +128,11 @@ public class SkateController : MonoBehaviour {
     }
 
     void Update () {
-        //SetDirection();
+        SetDirection();
         //if (setDirection) {
         //    SetVelocityDirection();
         //}
         KeyBoardControl();
-        //SituateHoverpoints();
-    }
-
-    private void SituateHoverpoints() {
-        foreach (GameObject hoverpoint in m_hoverPoints) {
-            Vector3 tablePosition = new Vector3(transform.position.x, hoverpoint.transform.position.y, transform.position.z);
-            Vector3 direction = hoverpoint.transform.position - tablePosition;
-            hoverpoint.transform.position = tablePosition + direction * hoverPointsDistance;
-        }
     }
 
     private void KeyBoardControl() {
@@ -181,7 +173,7 @@ public class SkateController : MonoBehaviour {
     }
 
     private void SetVelocityDirection() {
-        transform.rotation = Quaternion.LookRotation(rigidbody.velocity, Vector3.up);
+        transform.rotation = Quaternion.LookRotation(m_body.velocity, Vector3.up);
     }
 
     private void CalculateAxisX() {
@@ -197,12 +189,12 @@ public class SkateController : MonoBehaviour {
     }
 
     private void SetDirection() {
-        if (rigidbody.angularVelocity.sqrMagnitude < maxSpeed && rigidbody.velocity.sqrMagnitude > 0.5f) {
+        if (m_body.angularVelocity.sqrMagnitude < maxSpeed && m_body.velocity.sqrMagnitude > 0.5f) {
             CalculateAxisX();
             torqueForce = new Vector3(0, AxisX * torqueAcelerationMultiplier /** rigidbody.velocity.sqrMagnitude*/, 0);
-            float forceSmoother = Mathf.Clamp(1 - rigidbody.angularVelocity.sqrMagnitude / maxSpeed, 0.25f, 1);
+            float forceSmoother = Mathf.Clamp(1 - m_body.angularVelocity.sqrMagnitude / maxSpeed, 0.25f, 1);
             torqueForce *= forceSmoother;
-            rigidbody.AddTorque(torqueForce, ForceMode.Acceleration);
+            m_body.AddTorque(torqueForce, ForceMode.Acceleration);
         }
     }
 

@@ -6,6 +6,7 @@ using VRInteraction;
 public class Velocimeter : MonoBehaviour {
     [SerializeField] private VRInput hand;
     public Rigidbody thisRigidbody;
+    public float smoothValue = 5f;
     public float velocity;
     // Use this for initialization
     void Start () {
@@ -18,7 +19,9 @@ public class Velocimeter : MonoBehaviour {
         if(hand == null) {
             hand = FindObjectOfType<RemoteAcelerator>().GetComponent<VRInput>();
         }
-        thisRigidbody.MovePosition(hand.transform.position);
+        Vector3 direction = (hand.transform.position - transform.position).normalized;
+        float distance = Vector3.Distance(hand.transform.position, transform.position);
+        thisRigidbody.velocity = (transform.position + direction * distance/smoothValue * Time.deltaTime);
         velocity = thisRigidbody.velocity.magnitude;
 	}
 }
